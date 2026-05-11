@@ -11,4 +11,5 @@ public interface UserService {
     String login(LoginRequest loginRequest);
     String register(RegisterRequest registerRequest);
     UserDto getUserById();
+    UserDto getUserById(int id);
 }

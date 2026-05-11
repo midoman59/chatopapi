@@ -64,8 +64,8 @@ private final JwtService jwtService;
     }
 
     /**
-     * @param
-     * @return
+     * Récupère les infos de l'utilisateur actuellement authentifié (via le token JWT)
+     * @return UserDto avec les infos de l'utilisateur
      */
     @Override
     public UserDto getUserById() {
@@ -78,6 +78,20 @@ private final JwtService jwtService;
             throw new InvalidCredentialsException("Identifiant utilisateur invalide");
         }
         Optional<User> user = userRepository.findById(userId);
+        if (user.isEmpty()) {
+            throw new InvalidCredentialsException("Utilisateur introuvable");
+        }
+        return userMapper.fromUserToUserDto(user.get());
+    }
+
+    /**
+     * Récupère les infos d'un utilisateur spécifique par son ID
+     * @param id l'ID de l'utilisateur à récupérer
+     * @return UserDto avec les infos de l'utilisateur
+     */
+    @Override
+    public UserDto getUserById(int id) {
+        Optional<User> user = userRepository.findById(id);
         if (user.isEmpty()) {
             throw new InvalidCredentialsException("Utilisateur introuvable");
         }
