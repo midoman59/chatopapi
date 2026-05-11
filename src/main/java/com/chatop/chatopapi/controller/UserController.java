@@ -3,13 +3,16 @@ package com.chatop.chatopapi.controller;
 import com.chatop.chatopapi.dto.AuthResponse;
 import com.chatop.chatopapi.dto.LoginRequest;
 import com.chatop.chatopapi.dto.RegisterRequest;
+import com.chatop.chatopapi.dto.UserDto;
+
 import com.chatop.chatopapi.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+
+import org.springframework.web.bind.annotation.*;
+
+
 
 @RestController
 @RequestMapping("/api/auth")
@@ -21,14 +24,20 @@ public class UserController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
         String token = userService.register(registerRequest);
         return ResponseEntity.ok(new AuthResponse(token));
     }
 
     @PostMapping("/login")
-    public  ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest) {
+    public  ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         String token = userService.login(loginRequest);
         return ResponseEntity.ok(new AuthResponse(token));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserDto> getCurrentUser() {
+        UserDto userDto = userService.getUserById();
+        return ResponseEntity.ok(userDto);
     }
 }

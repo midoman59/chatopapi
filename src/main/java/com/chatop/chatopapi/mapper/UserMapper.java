@@ -3,6 +3,7 @@ package com.chatop.chatopapi.mapper;
 
 import com.chatop.chatopapi.dto.RegisterRequest;
 
+import com.chatop.chatopapi.dto.UserDto;
 import com.chatop.chatopapi.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,6 +28,19 @@ public class UserMapper {
         user.setCreatedAt(LocalDate.now());
         user.setUpdatedAt(LocalDate.now());
         return user;
+    }
+
+    public UserDto fromUserToUserDto(User user) {
+        UserDto userDto = new UserDto();
+        if (user != null) {
+            userDto.setId(user.getId());
+            userDto.setName(user.getName());
+            userDto.setEmail(user.getEmail());
+            userDto.setCreated_at(user.getCreatedAt());
+            userDto.setUpdated_at(user.getUpdatedAt());
+
+        }
+        return userDto;
     }
 
 }
