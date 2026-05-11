@@ -8,6 +8,7 @@ import com.chatop.chatopapi.exception.EmailAlreadyUsedException;
 import com.chatop.chatopapi.exception.InvalidCredentialsException;
 import com.chatop.chatopapi.mapper.UserMapper;
 import com.chatop.chatopapi.repository.UserRepository;
+import com.chatop.chatopapi.security.JwtService;
 import com.chatop.chatopapi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -28,6 +29,8 @@ private final UserMapper userMapper;
 
 private final PasswordEncoder passwordEncoder;
 
+private final JwtService jwtService;
+
 
 
     /**
@@ -43,7 +46,7 @@ private final PasswordEncoder passwordEncoder;
         } if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new InvalidCredentialsException("Invalid password");
         }
-        return "token";
+        return jwtService.generateToken(user.getId());
     }
 
     /**
@@ -57,7 +60,7 @@ private final PasswordEncoder passwordEncoder;
         }
         User user = userMapper.fromRegisterRequestToUser(registerRequest);
         userRepository.save(user);
-        return "token";
+        return jwtService.generateToken(user.getId());
     }
 
     /**
