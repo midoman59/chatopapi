@@ -139,6 +139,48 @@ ALTER TABLE `messages`
 
 L'application crée automatiquement les tables via JPA Hibernate. Vérifiez que `spring.jpa.hibernate.ddl-auto` est configuré correctement dans `application.properties`.
 
+### 2b. Créer un utilisateur MySQL avec permissions limitées (recommandé pour la sécurité)
+
+⚠️ **Important** : Ne pas utiliser le compte root en production. Créez un utilisateur dédié avec permissions limitées.
+
+#### Créer l'utilisateur et la base de données
+
+Connectez-vous à MySQL en tant que root :
+
+```bash
+mysql -u root -p
+```
+
+Exécutez les commandes suivantes :
+
+```sql
+-- Créer la base de données
+CREATE DATABASE IF NOT EXISTS chatop;
+
+-- Créer un utilisateur dédié (remplacez `secure_password` par un mot de passe sécurisé)
+CREATE USER 'chatop_user'@'localhost' IDENTIFIED BY 'secure_password';
+
+-- Accorder les permissions nécessaires UNIQUEMENT sur la base chatop
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, INDEX ON chatop.* TO 'chatop_user'@'localhost';
+
+-- Appliquer les modifications
+FLUSH PRIVILEGES;
+
+-- Vérifier la création
+SHOW GRANTS FOR 'chatop_user'@'localhost';
+```
+
+#### Configurer les variables d'environnement avec cet utilisateur
+
+Mettez à jour vos variables d'environnement :
+
+```
+DB_URL=jdbc:mysql://localhost:3306/chatop
+DB_USER=chatop_user
+DB_PASS=secure_password
+SECRET_KEY=votre_clé_secrète_jwt
+```
+
 ### 3. Configuration du dossier d'uploads
 
 L'application stocke les images des locations dans le dossier `./uploads`. Assurez-vous que ce dossier existe :
