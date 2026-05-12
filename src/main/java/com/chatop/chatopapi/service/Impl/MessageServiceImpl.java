@@ -28,10 +28,10 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public String envoyerMessage(MessageRequest request) {
 
-        User user = userRepository.findById(request.getUserId())
+        User user = userRepository.findById(request.getUser_id())
                 .orElseThrow(() -> new InvalidCredentialsException("Utilisateur introuvable"));
 
-        Rental rental = rentalRepository.findById(request.getRentalId())
+        Rental rental = rentalRepository.findById(request.getRental_id())
                 .orElseThrow(() -> new RuntimeException("Rental introuvable"));
         Message message = messageMapper.toEntity(request.getMessage(), user, rental);
         messageRepository.save(message);
