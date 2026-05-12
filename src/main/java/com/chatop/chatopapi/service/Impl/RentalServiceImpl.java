@@ -5,6 +5,7 @@ import com.chatop.chatopapi.dto.RentalResponse;
 import com.chatop.chatopapi.entity.Rental;
 import com.chatop.chatopapi.entity.User;
 import com.chatop.chatopapi.exception.InvalidCredentialsException;
+import com.chatop.chatopapi.exception.ResourceNotFoundException;
 import com.chatop.chatopapi.mapper.RentalMapper;
 import com.chatop.chatopapi.repository.RentalRepository;
 import com.chatop.chatopapi.repository.UserRepository;
@@ -46,7 +47,7 @@ public class RentalServiceImpl implements RentalService {
     @Override
     public RentalResponse recupererRentalParId(Integer id) {
         Rental rental = rentalRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Rental introuvable"));
+                .orElseThrow(() -> new ResourceNotFoundException("Rental introuvable"));
         return rentalMapper.toRentalResponse(rental);
     }
 
@@ -73,7 +74,7 @@ public class RentalServiceImpl implements RentalService {
     @Override
     public String mettreAJourRental(Integer id, RentalRequest request) {
         Rental rental = rentalRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Rental introuvable"));
+                .orElseThrow(() -> new ResourceNotFoundException("Rental introuvable"));
 
         rental.setName(request.getName());
         rental.setSurface(request.getSurface());

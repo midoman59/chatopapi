@@ -5,6 +5,7 @@ import com.chatop.chatopapi.entity.Message;
 import com.chatop.chatopapi.entity.Rental;
 import com.chatop.chatopapi.entity.User;
 import com.chatop.chatopapi.exception.InvalidCredentialsException;
+import com.chatop.chatopapi.exception.ResourceNotFoundException;
 import com.chatop.chatopapi.mapper.MessageMapper;
 import com.chatop.chatopapi.repository.MessageRepository;
 import com.chatop.chatopapi.repository.RentalRepository;
@@ -32,7 +33,7 @@ public class MessageServiceImpl implements MessageService {
                 .orElseThrow(() -> new InvalidCredentialsException("Utilisateur introuvable"));
 
         Rental rental = rentalRepository.findById(request.getRental_id())
-                .orElseThrow(() -> new RuntimeException("Rental introuvable"));
+                .orElseThrow(() -> new ResourceNotFoundException("Rental introuvable"));
         Message message = messageMapper.toEntity(request.getMessage(), user, rental);
         messageRepository.save(message);
         return "Message send with success";
